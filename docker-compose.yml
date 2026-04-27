@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  app-backend:
+    build: ./Backend
+    container_name: fera-spring-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=America/Sao_Paulo
+    restart: always
