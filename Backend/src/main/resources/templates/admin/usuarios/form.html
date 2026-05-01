@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Usuário - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <a th:href="@{/admin/usuarios}" class="text-gray-500 hover:text-gray-800">← Voltar</a>
+            <h1 class="text-2xl font-bold text-gray-800"
+                th:text="${usuario.id != null} ? 'Editar Usuário' : 'Novo Usuário'">Usuário</h1>
+        </div>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <div class="bg-white rounded-xl shadow p-6 max-w-xl">
+            <form th:action="${usuario.id != null} ? @{/admin/usuarios/editar/{id}(id=${usuario.id})} : @{/admin/usuarios/novo}"
+                  th:object="${usuario}" method="post">
+
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
+                        <input type="text" th:field="*{nome}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                        <p th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                        <input type="email" th:field="*{email}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Senha <span th:if="${usuario.id != null}" class="text-gray-400 font-normal">(deixe em branco para manter)</span>
+                        </label>
+                        <input type="password" th:field="*{senha}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Perfil *</label>
+                        <select th:field="*{role}"
+                                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <input type="text" th:field="*{telefone}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
+                        <input type="text" th:field="*{cidade}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" th:field="*{ativo}" class="w-4 h-4"/>
+                            <span class="text-sm text-gray-700">Usuário ativo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-3">
+                    <button type="submit"
+                            class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">
+                        Salvar
+                    </button>
+                    <a th:href="@{/admin/usuarios}"
+                       class="bg-gray-200 text-gray-700 px-6 py-2 rounded hover:bg-gray-300">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

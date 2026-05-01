@@ -65,6 +65,12 @@ public class Produto {
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
 
+    @Column(name = "mais_vendido", nullable = false)
+    private boolean maisVendido = false;
+
+    @Column(nullable = false)
+    private boolean destaque = false;
+
     @PrePersist
     protected void onCreate() {
         criadoEm = LocalDateTime.now();

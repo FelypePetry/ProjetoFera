@@ -53,6 +53,10 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
+    public long contarTodos(){
+        return produtoRepository.count();
+    }
+
     public Produto atualizar(Long id, Produto dados) {
         Produto produto = findById(id);
         if (!produto.getCodigo().equals(dados.getCodigo()) && produtoRepository.existsByCodigo(dados.getCodigo())) {

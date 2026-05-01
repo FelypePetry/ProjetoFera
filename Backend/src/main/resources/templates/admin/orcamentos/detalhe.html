@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Orçamento - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <a th:href="@{/admin/orcamentos}" class="text-gray-500 hover:text-gray-800">← Voltar</a>
+            <h1 class="text-2xl font-bold text-gray-800">Orçamento #<span th:text="${orcamento.id}"></span></h1>
+        </div>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Dados do orçamento -->
+            <div class="col-span-2 bg-white rounded-xl shadow p-6">
+                <h2 class="font-semibold text-gray-700 mb-4">Detalhes do Pedido</h2>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="text-gray-400">Tipo de Móvel</p>
+                        <p class="font-medium" th:text="${orcamento.tipoMovel}">-</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">Medidas</p>
+                        <p class="font-medium" th:text="${orcamento.medidas ?: '-'}">-</p>
+                    </div>
+                    <div class="col-span-2">
+                        <p class="text-gray-400">Observações</p>
+                        <p class="font-medium" th:text="${orcamento.observacoes ?: '-'}">-</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">Data de solicitação</p>
+                        <p class="font-medium" th:text="${#temporals.format(orcamento.criadoEm, 'dd/MM/yyyy HH:mm')}">-</p>
+                    </div>
+                    <div th:if="${orcamento.imagemPath != null}">
+                        <p class="text-gray-400">Imagem de referência</p>
+                        <a th:href="@{'/uploads/' + ${orcamento.imagemPath}}"
+                           class="text-blue-600 hover:underline text-sm" target="_blank">Ver imagem</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cliente e status -->
+            <div class="flex flex-col gap-4">
+                <div class="bg-white rounded-xl shadow p-6">
+                    <h2 class="font-semibold text-gray-700 mb-4">Cliente</h2>
+                    <p class="font-medium" th:text="${orcamento.usuario.nome}">-</p>
+                    <p class="text-gray-500 text-sm" th:text="${orcamento.usuario.email}">-</p>
+                    <p class="text-gray-500 text-sm" th:text="${orcamento.usuario.telefone ?: ''}">-</p>
+                    <p class="text-gray-500 text-sm" th:text="${orcamento.usuario.cidade ?: ''}">-</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-6">
+                    <h2 class="font-semibold text-gray-700 mb-4">Atualizar Status</h2>
+                    <form th:action="@{/admin/orcamentos/{id}/status(id=${orcamento.id})}" method="post">
+
+                        <select name="status" class="w-full border rounded px-3 py-2 mb-3 text-sm">
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s}"
+                                    th:text="${s}"
+                                    th:selected="${s == orcamento.status}"></option>
+                        </select>
+                        <button type="submit"
+                                class="w-full bg-green-700 text-white py-2 rounded hover:bg-green-800 text-sm">
+                            Salvar Status
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

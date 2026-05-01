@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dashboard - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+
+    <!-- Conteúdo -->
+    <main class="flex-1 p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Visão Geral</h1>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <!-- Cards -->
+        <div class="grid grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-xl p-5 shadow">
+                <p class="text-gray-500 text-sm">Total de Orçamentos</p>
+                <p class="text-3xl font-bold mt-1" th:text="${totalOrcamentos}">0</p>
+            </div>
+            <div class="bg-white rounded-xl p-5 shadow">
+                <p class="text-gray-500 text-sm">Em Análise</p>
+                <p class="text-3xl font-bold mt-1 text-yellow-500" th:text="${emAnalise}">0</p>
+            </div>
+            <div class="bg-white rounded-xl p-5 shadow">
+                <p class="text-gray-500 text-sm">Em Produção</p>
+                <p class="text-3xl font-bold mt-1 text-green-500" th:text="${emProducao}">0</p>
+            </div>
+            <div class="bg-white rounded-xl p-5 shadow">
+                <p class="text-gray-500 text-sm">Total de Produtos</p>
+                <p class="text-3xl font-bold mt-1 text-blue-500" th:text="${totalProdutos}">0</p>
+            </div>
+        </div>
+
+        <!-- Orçamentos Recentes -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Orçamentos Recentes</h2>
+                <a th:href="@{/admin/orcamentos}" class="text-sm text-blue-600 hover:underline">Ver todos</a>
+            </div>
+            <table class="w-full text-sm">
+                <thead class="text-left text-gray-500 border-b">
+                    <tr>
+                        <th class="pb-2">Tipo de Móvel</th>
+                        <th class="pb-2">Cliente</th>
+                        <th class="pb-2">Cidade</th>
+                        <th class="pb-2">Status</th>
+                        <th class="pb-2">Data</th>
+                        <th class="pb-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="orc : ${orcamentosRecentes}"
+                        class="border-b last:border-0 hover:bg-gray-50">
+                        <td class="py-3 font-medium" th:text="${orc.tipoMovel}">-</td>
+                        <td class="py-3" th:text="${orc.usuario.nome}">-</td>
+                        <td class="py-3" th:text="${orc.usuario.cidade}">-</td>
+                        <td class="py-3">
+                            <span th:text="${orc.status}"
+                                  th:classappend="${orc.status.name() == 'PENDENTE'} ? 'bg-gray-100 text-gray-700' :
+                                                  (${orc.status.name() == 'EM_ANALISE'} ? 'bg-yellow-100 text-yellow-700' :
+                                                  (${orc.status.name() == 'APROVADO'} ? 'bg-green-100 text-green-700' :
+                                                  (${orc.status.name() == 'EM_PRODUCAO'} ? 'bg-blue-100 text-blue-700' :
+                                                  (${orc.status.name() == 'FINALIZADO'} ? 'bg-purple-100 text-purple-700' : 'bg-red-100 text-red-700'))))"
+                                  class="px-2 py-1 rounded-full text-xs font-medium">
+                            </span>
+                        </td>
+                        <td class="py-3 text-gray-500"
+                            th:text="${#temporals.format(orc.criadoEm, 'dd/MM/yyyy')}">-</td>
+                        <td class="py-3">
+                            <a th:href="@{/admin/orcamentos/{id}(id=${orc.id})}"
+                               class="text-blue-600 hover:underline text-xs">Ver</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(orcamentosRecentes)}">
+                        <td colspan="6" class="py-6 text-center text-gray-400">Nenhum orçamento ainda.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

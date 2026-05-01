@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Produtos - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Produtos</h1>
+            <a th:href="@{/admin/produtos/novo}"
+               class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+                + Novo Produto
+            </a>
+        </div>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left">
+                    <tr>
+                        <th class="px-4 py-3">Nome</th>
+                        <th class="px-4 py-3">Código</th>
+                        <th class="px-4 py-3">Categoria</th>
+                        <th class="px-4 py-3">Material</th>
+                        <th class="px-4 py-3">Preço</th>
+                        <th class="px-4 py-3">Estoque</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Destaque</th>
+                        <th class="px-4 py-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${produtos}" class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3 font-medium" th:text="${p.nome}">-</td>
+                        <td class="px-4 py-3 text-gray-500" th:text="${p.codigo}">-</td>
+                        <td class="px-4 py-3" th:text="${p.categoria}">-</td>
+                        <td class="px-4 py-3" th:text="${p.material}">-</td>
+                        <td class="px-4 py-3" th:text="'R$ ' + ${#numbers.formatDecimal(p.preco, 1, 2)}">-</td>
+                        <td class="px-4 py-3" th:text="${p.estoque}">-</td>
+                        <td class="px-4 py-3">
+                            <span th:if="${p.ativo}" class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Ativo</span>
+                            <span th:unless="${p.ativo}" class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">Inativo</span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span th:if="${p.destaque}" class="text-yellow-500 font-bold">★</span>
+                            <span th:unless="${p.destaque}" class="text-gray-300">★</span>
+                        </td>
+                        <td class="px-4 py-3 flex gap-2">
+                            <a th:href="@{/admin/produtos/editar/{id}(id=${p.id})}"
+                               class="text-blue-600 hover:underline">Editar</a>
+                            <form th:action="@{/admin/produtos/desativar/{id}(id=${p.id})}" method="post">
+
+                                <button type="submit" class="text-yellow-600 hover:underline"
+                                        onclick="return confirm('Desativar produto?')">Desativar</button>
+                            </form>
+                            <form th:action="@{/admin/produtos/deletar/{id}(id=${p.id})}" method="post">
+
+                                <button type="submit" class="text-red-600 hover:underline"
+                                        onclick="return confirm('Remover produto?')">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(produtos)}">
+                        <td colspan="9" class="px-4 py-8 text-center text-gray-400">Nenhum produto cadastrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

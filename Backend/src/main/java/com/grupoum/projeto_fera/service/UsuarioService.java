@@ -61,6 +61,10 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    public long contarTodos(){
+        return usuarioRepository.count();
+    }
+
     public void deletar(Long id) {
         usuarioRepository.delete(findById(id));
     }

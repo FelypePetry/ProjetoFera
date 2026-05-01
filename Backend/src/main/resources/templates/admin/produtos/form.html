@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Produto - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <a th:href="@{/admin/produtos}" class="text-gray-500 hover:text-gray-800">← Voltar</a>
+            <h1 class="text-2xl font-bold text-gray-800"
+                th:text="${produto.id != null} ? 'Editar Produto' : 'Novo Produto'">Produto</h1>
+        </div>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <div class="bg-white rounded-xl shadow p-6 max-w-2xl">
+            <form th:action="${produto.id != null} ? @{/admin/produtos/editar/{id}(id=${produto.id})} : @{/admin/produtos/novo}"
+                  th:object="${produto}" method="post">
+
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome *</label>
+                        <input type="text" th:field="*{nome}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                        <p th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Código *</label>
+                        <input type="text" th:field="*{codigo}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                        <p th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Preço *</label>
+                        <input type="number" step="0.01" th:field="*{preco}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                        <p th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}" class="text-red-500 text-xs mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Estoque *</label>
+                        <input type="number" th:field="*{estoque}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Unidade de Medida *</label>
+                        <input type="text" th:field="*{unidadeMedida}" placeholder="ex: un, kg, m²"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                        <input type="text" th:field="*{categoria}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Material</label>
+                        <input type="text" th:field="*{material}"
+                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                        <textarea th:field="*{descricao}" rows="3"
+                                  class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    </div>
+
+                    <div class="flex items-center gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" th:field="*{ativo}" class="w-4 h-4"/>
+                            <span class="text-sm text-gray-700">Ativo</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" th:field="*{destaque}" class="w-4 h-4"/>
+                            <span class="text-sm text-gray-700">Destaque na home</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" th:field="*{maisVendido}" class="w-4 h-4"/>
+                            <span class="text-sm text-gray-700">Mais vendido</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-3">
+                    <button type="submit"
+                            class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">
+                        Salvar
+                    </button>
+                    <a th:href="@{/admin/produtos}"
+                       class="bg-gray-200 text-gray-700 px-6 py-2 rounded hover:bg-gray-300">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

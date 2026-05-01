@@ -55,6 +55,12 @@ public class Usuario {
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
 
+    @Column(name = "telefone")
+    private String telefone;
+
+    @Column(name = "cidade")
+    private String cidade;
+
     @PrePersist
     protected void onCreate() {
         criadoEm = LocalDateTime.now();

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Orçamentos - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Orçamentos</h1>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left">
+                    <tr>
+                        <th class="px-4 py-3">#</th>
+                        <th class="px-4 py-3">Tipo de Móvel</th>
+                        <th class="px-4 py-3">Cliente</th>
+                        <th class="px-4 py-3">Cidade</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Data</th>
+                        <th class="px-4 py-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="orc : ${orcamentos}" class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3 text-gray-400" th:text="${orc.id}">-</td>
+                        <td class="px-4 py-3 font-medium" th:text="${orc.tipoMovel}">-</td>
+                        <td class="px-4 py-3" th:text="${orc.usuario.nome}">-</td>
+                        <td class="px-4 py-3" th:text="${orc.usuario.cidade ?: '-'}">-</td>
+                        <td class="px-4 py-3">
+                            <span th:text="${orc.status}"
+                                  th:classappend="${orc.status.name() == 'PENDENTE'} ? 'bg-gray-100 text-gray-700' :
+                                                  (${orc.status.name() == 'EM_ANALISE'} ? 'bg-yellow-100 text-yellow-700' :
+                                                  (${orc.status.name() == 'APROVADO'} ? 'bg-green-100 text-green-700' :
+                                                  (${orc.status.name() == 'EM_PRODUCAO'} ? 'bg-blue-100 text-blue-700' :
+                                                  (${orc.status.name() == 'FINALIZADO'} ? 'bg-purple-100 text-purple-700' : 'bg-red-100 text-red-700'))))"
+                                  class="px-2 py-1 rounded-full text-xs font-medium"></span>
+                        </td>
+                        <td class="px-4 py-3 text-gray-500"
+                            th:text="${#temporals.format(orc.criadoEm, 'dd/MM/yyyy')}">-</td>
+                        <td class="px-4 py-3 flex gap-2">
+                            <a th:href="@{/admin/orcamentos/{id}(id=${orc.id})}"
+                               class="text-blue-600 hover:underline">Ver</a>
+                            <form th:action="@{/admin/orcamentos/deletar/{id}(id=${orc.id})}" method="post">
+
+                                <button type="submit" class="text-red-600 hover:underline"
+                                        onclick="return confirm('Remover orçamento?')">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(orcamentos)}">
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-400">Nenhum orçamento ainda.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

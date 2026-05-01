@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Usuários - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Usuários</h1>
+            <a th:href="@{/admin/usuarios/novo}"
+               class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+                + Novo Usuário
+            </a>
+        </div>
+
+        <div th:replace="~{fragments/admin-layout :: alertas}"></div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left">
+                    <tr>
+                        <th class="px-4 py-3">Nome</th>
+                        <th class="px-4 py-3">Email</th>
+                        <th class="px-4 py-3">Telefone</th>
+                        <th class="px-4 py-3">Cidade</th>
+                        <th class="px-4 py-3">Perfil</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${usuarios}" class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3 font-medium" th:text="${u.nome}">-</td>
+                        <td class="px-4 py-3 text-gray-500" th:text="${u.email}">-</td>
+                        <td class="px-4 py-3" th:text="${u.telefone ?: '-'}">-</td>
+                        <td class="px-4 py-3" th:text="${u.cidade ?: '-'}">-</td>
+                        <td class="px-4 py-3">
+                            <span th:text="${u.role}"
+                                  th:classappend="${u.role.name() == 'ROLE_ADMIN'} ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'"
+                                  class="px-2 py-1 rounded-full text-xs font-medium"></span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span th:if="${u.ativo}" class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Ativo</span>
+                            <span th:unless="${u.ativo}" class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">Inativo</span>
+                        </td>
+                        <td class="px-4 py-3 flex gap-2">
+                            <a th:href="@{/admin/usuarios/editar/{id}(id=${u.id})}"
+                               class="text-blue-600 hover:underline">Editar</a>
+                            <form th:action="@{/admin/usuarios/desativar/{id}(id=${u.id})}" method="post">
+
+                                <button type="submit" class="text-yellow-600 hover:underline"
+                                        onclick="return confirm('Desativar usuário?')">Desativar</button>
+                            </form>
+                            <form th:action="@{/admin/usuarios/deletar/{id}(id=${u.id})}" method="post">
+
+                                <button type="submit" class="text-red-600 hover:underline"
+                                        onclick="return confirm('Remover usuário?')">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(usuarios)}">
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-400">Nenhum usuário cadastrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
