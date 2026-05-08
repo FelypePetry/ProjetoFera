@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -47,6 +48,23 @@ public class Orcamento {
 
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal valor;
+
+    @Column
+    private Integer progresso = 0;
+
+    public Integer getProgresso() {
+        return switch (this.status) {
+            case PENDENTE -> 10;
+            case EM_ANALISE -> 30;
+            case APROVADO -> 50;
+            case EM_PRODUCAO -> 70;
+            case FINALIZADO -> 100;
+            case CANCELADO -> 0;
+        };
+    }
 
     @PrePersist
     protected void onCreate() {

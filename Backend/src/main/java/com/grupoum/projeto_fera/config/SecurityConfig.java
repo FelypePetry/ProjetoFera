@@ -66,6 +66,9 @@ public class SecurityConfig {
                 // Usuários: apenas ADMIN
                 .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
 
+                // Página Cliente: USER E ADMIN
+                    .requestMatchers("/cliente/**").hasAnyRole("USER", "ADMIN")
+
                 // Qualquer outra rota precisa de autenticação
                 .anyRequest().authenticated()
             )
