@@ -1,2 +1,2 @@
 ## PROJETO FERA METALÚRGICA - GRUPO 1 - FACULDADE DONADUZZI
-Théo Gabriel, Felype Petry, Rafael Sasso, Pedro, Bárbara, Mateus
+Théo Gabriel, Felype Petry, Brbara B. Simioni, Rafael Sasso, Pedro, Mateus
