@@ -1,5 +1,6 @@
 package com.grupoum.projeto_fera.config;
 
+import com.grupoum.projeto_fera.model.Role;
 import com.grupoum.projeto_fera.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -47,17 +48,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Desabilita CSRF para API REST
             .csrf(AbstractHttpConfigurer::disable)
-            // Permite frames para o H2 Console
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
             .authorizeHttpRequests(auth -> auth
-                // H2 Console - público
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll() // Permitir acesso aos endpoints de autenticação
 
-                // Produtos: leitura para USER e ADMIN, escrita só ADMIN
-                .requestMatchers(HttpMethod.GET, "/api/produtos/**").hasAnyRole("USER", "ADMIN")
+                // Produtos: leitura para todos, escrita só ADMIN
+                .requestMatchers(HttpMethod.GET, "/api/produtos/**").hasAnyRole("USER", "ADMIN", "CLIENTE")
                 .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMIN")
@@ -66,13 +65,14 @@ public class SecurityConfig {
                 // Usuários: apenas ADMIN
                 .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
 
-                // Página Cliente: USER E ADMIN
-                    .requestMatchers("/cliente/**").hasAnyRole("USER", "ADMIN")
+                // Clientes: ADMIN pode gerenciar, CLIENTE pode ver/editar o seu
+                .requestMatchers("/api/clientes/**").hasAnyRole("ADMIN", "CLIENTE")
 
-                // Qualquer outra rota precisa de autenticação
+                // Página Cliente: USER, ADMIN e CLIENTE
+                .requestMatchers("/cliente/**").hasAnyRole("USER", "ADMIN", "CLIENTE")
+
                 .anyRequest().authenticated()
             )
-            // Autenticação HTTP Basic (padrão Spring Security)
             .httpBasic(Customizer.withDefaults())
             .authenticationProvider(authenticationProvider());
 
