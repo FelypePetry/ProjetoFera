@@ -1,6 +1,6 @@
 -- PRODUTOS
 CREATE TABLE produtos (
-    id BIGSERIAL       PRIMARY KEY,
+    id             BIGSERIAL       PRIMARY KEY,
     nome           VARCHAR(150)    NOT NULL,
     descricao      VARCHAR(500),
     codigo         VARCHAR(50)     NOT NULL UNIQUE,
@@ -29,18 +29,6 @@ CREATE TABLE orcamentos (
     atualizado_em TIMESTAMP,
     valor         NUMERIC(12, 2),
     progresso     INT            DEFAULT 0,
-
-    CONSTRAINT fk_orcamento_usuario
-        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-);
-
--- FEEDBACKS
-CREATE TABLE feedbacks (
-    id         BIGSERIAL     PRIMARY KEY,
-    mensagem   VARCHAR(1000) NOT NULL,
-    usuario_id BIGINT        NOT NULL,
-    criado_em  TIMESTAMP     NOT NULL,
-
-    CONSTRAINT fk_feedback_usuario
-       FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        CONSTRAINT fk_orcamento_usuario
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
