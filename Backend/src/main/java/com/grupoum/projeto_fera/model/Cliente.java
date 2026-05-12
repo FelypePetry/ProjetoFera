@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@SuperBuilder          // ✅ troca @Builder por @SuperBuilder
 @Entity
 @Table(name = "clientes")
 public class Cliente extends Pessoa {
