@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -21,6 +22,9 @@ public class Orcamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrcamentoProduto> orcamentoProdutos;
 
     @NotBlank(message = "Tipo de móvel é obrigatório")
     @Column(name = "tipo_movel", nullable = false, length = 100)

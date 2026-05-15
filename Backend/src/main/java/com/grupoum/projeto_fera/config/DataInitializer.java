@@ -1,8 +1,10 @@
 package com.grupoum.projeto_fera.config;
 
+import com.grupoum.projeto_fera.model.Material;
 import com.grupoum.projeto_fera.model.Produto;
 import com.grupoum.projeto_fera.model.Role;
 import com.grupoum.projeto_fera.model.Usuario;
+import com.grupoum.projeto_fera.repository.MaterialRepository;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import com.grupoum.projeto_fera.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -20,6 +23,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UsuarioRepository usuarioRepository;
     private final ProdutoRepository produtoRepository;
+    private final MaterialRepository materialRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -47,6 +51,10 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (produtoRepository.count() == 0) {
+            Material acoInox = materialRepository.save(Material.builder().nome("Aço Inox 304").build());
+            Material aluminio = materialRepository.save(Material.builder().nome("Alumínio").build());
+            Material ferro = materialRepository.save(Material.builder().nome("Ferro").build());
+
             produtoRepository.save(Produto.builder()
                     .nome("Chapa de Aço Inox 304")
                     .descricao("Chapa de aço inoxidável 304, acabamento 2B")
@@ -54,7 +62,7 @@ public class DataInitializer implements CommandLineRunner {
                     .preco(new BigDecimal("850.00"))
                     .estoque(120)
                     .unidadeMedida("m²")
-                    .material("Aço Inox 304")
+                    .materiais(Set.of(acoInox))
                     .categoria("Chapas")
                     .ativo(true)
                     .build());
@@ -66,7 +74,7 @@ public class DataInitializer implements CommandLineRunner {
                     .preco(new BigDecimal("45.90"))
                     .estoque(500)
                     .unidadeMedida("un")
-                    .material("Alumínio")
+                    .materiais(Set.of(aluminio))
                     .categoria("Tubos")
                     .ativo(true)
                     .build());
@@ -78,7 +86,7 @@ public class DataInitializer implements CommandLineRunner {
                     .preco(new BigDecimal("18.50"))
                     .estoque(300)
                     .unidadeMedida("m")
-                    .material("Ferro")
+                    .materiais(Set.of(ferro))
                     .categoria("Barras")
                     .ativo(true)
                     .build());

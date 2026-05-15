@@ -1,8 +1,8 @@
 package com.grupoum.projeto_fera.controller.cliente;
 
 import com.grupoum.projeto_fera.service.FeedbackService;
+import com.grupoum.projeto_fera.service.ClienteService;
 import com.grupoum.projeto_fera.service.OrcamentoService;
-import com.grupoum.projeto_fera.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,14 +21,14 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class ClienteController {
 
-    private final UsuarioService usuarioService;
+    private final ClienteService clienteService;
     private final OrcamentoService orcamentoService;
     private final FeedbackService feedbackService;
 
     @GetMapping
     public String minhaConta(Model model, Principal principal) {
-        model.addAttribute("usuario", usuarioService.buscarPorEmail(principal.getName()));
-        return "cliente";
+        model.addAttribute("cliente", clienteService.buscarPorEmail(principal.getName()));
+        return "cliente/perfil"; // Sugestão: usar um nome de view mais específico
     }
 
     @GetMapping("/pedidos")

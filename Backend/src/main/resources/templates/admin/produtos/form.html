@@ -19,8 +19,7 @@
 
         <div class="bg-white rounded-xl shadow p-6 max-w-2xl">
             <form th:action="${produto.id != null} ? @{/admin/produtos/editar/{id}(id=${produto.id})} : @{/admin/produtos/novo}"
-                  th:object="${produto}" method="post">
-
+                  th:object="${produto}" method="post" enctype="multipart/form-data">
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
@@ -56,16 +55,31 @@
                                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
                     </div>
 
-                    <div>
+                    <div class="col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-                        <input type="text" th:field="*{categoria}"
-                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                        <select th:field="*{categoria}" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Selecione uma categoria</option>
+                            <option th:each="cat : ${categorias}" th:value="${cat.nome}" th:text="${cat.nome}"></option>
+                        </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Material</label>
-                        <input type="text" th:field="*{material}"
-                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Materiais</label>
+                        <select th:field="*{materiais}" multiple class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option th:each="mat : ${materiais}" th:value="${mat.id}" th:text="${mat.nome}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cores</label>
+                        <select th:field="*{cores}" multiple class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option th:each="c : ${cores}" th:value="${c.id}" th:text="${c.nome}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Imagens</label>
+                        <input type="file" name="imagens" multiple class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
                     </div>
 
                     <div class="col-span-2">

@@ -68,9 +68,14 @@ public class ProdutoService {
         produto.setPreco(dados.getPreco());
         produto.setEstoque(dados.getEstoque());
         produto.setUnidadeMedida(dados.getUnidadeMedida());
-        produto.setMaterial(dados.getMaterial());
+        produto.setMateriais(dados.getMateriais());
+        produto.setCores(dados.getCores());
         produto.setCategoria(dados.getCategoria());
         produto.setAtivo(dados.isAtivo());
+        if (dados.getImagens() != null && !dados.getImagens().isEmpty()) {
+            produto.getImagens().clear();
+            produto.getImagens().addAll(dados.getImagens());
+        }
         return produtoRepository.save(produto);
     }
 

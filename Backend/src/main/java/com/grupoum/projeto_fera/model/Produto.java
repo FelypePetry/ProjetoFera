@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -21,6 +23,28 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrcamentoProduto> orcamentoProdutos;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagemProd> imagens;
+
+    @ManyToMany
+    @JoinTable(
+        name = "prod_material",
+        joinColumns = @JoinColumn(name = "id_produto"),
+        inverseJoinColumns = @JoinColumn(name = "id_material")
+    )
+    private Set<Material> materiais;
+
+    @ManyToMany
+    @JoinTable(
+            name = "prod_cor",
+            joinColumns = @JoinColumn(name = "id_produto"),
+            inverseJoinColumns = @JoinColumn(name = "id_cor")
+    )
+    private Set<Cor> cores;
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(min = 2, max = 150, message = "Nome deve ter entre 2 e 150 caracteres")
@@ -49,9 +73,6 @@ public class Produto {
     @NotBlank(message = "Unidade de medida é obrigatória")
     @Column(name = "unidade_medida", nullable = false, length = 20)
     private String unidadeMedida;
-
-    @Column(length = 100)
-    private String material;
 
     @Column(length = 100)
     private String categoria;

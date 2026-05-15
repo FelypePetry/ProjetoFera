@@ -26,7 +26,8 @@
                         <th class="px-4 py-3">Nome</th>
                         <th class="px-4 py-3">Código</th>
                         <th class="px-4 py-3">Categoria</th>
-                        <th class="px-4 py-3">Material</th>
+                        <th class="px-4 py-3">Materiais</th>
+                        <th class="px-4 py-3">Cores</th>
                         <th class="px-4 py-3">Preço</th>
                         <th class="px-4 py-3">Estoque</th>
                         <th class="px-4 py-3">Status</th>
@@ -39,7 +40,12 @@
                         <td class="px-4 py-3 font-medium" th:text="${p.nome}">-</td>
                         <td class="px-4 py-3 text-gray-500" th:text="${p.codigo}">-</td>
                         <td class="px-4 py-3" th:text="${p.categoria}">-</td>
-                        <td class="px-4 py-3" th:text="${p.material}">-</td>
+                        <td class="px-4 py-3">
+                            <span th:each="mat, iter : ${p.materiais}" th:text="${mat.nome} + (${iter.last} ? '' : ', ')"></span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span th:each="cor, iter : ${p.cores}" th:text="${cor.nome} + (${iter.last} ? '' : ', ')"></span>
+                        </td>
                         <td class="px-4 py-3" th:text="'R$ ' + ${#numbers.formatDecimal(p.preco, 1, 2)}">-</td>
                         <td class="px-4 py-3" th:text="${p.estoque}">-</td>
                         <td class="px-4 py-3">
@@ -66,7 +72,7 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(produtos)}">
-                        <td colspan="9" class="px-4 py-8 text-center text-gray-400">Nenhum produto cadastrado.</td>
+                        <td colspan="10" class="px-4 py-8 text-center text-gray-400">Nenhum produto cadastrado.</td>
                     </tr>
                 </tbody>
             </table>

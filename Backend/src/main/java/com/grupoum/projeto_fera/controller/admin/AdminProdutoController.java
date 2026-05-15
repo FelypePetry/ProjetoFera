@@ -1,14 +1,19 @@
 package com.grupoum.projeto_fera.controller.admin;
 
+import com.grupoum.projeto_fera.model.ImagemProd;
 import com.grupoum.projeto_fera.model.Produto;
-import com.grupoum.projeto_fera.service.ProdutoService;
+import com.grupoum.projeto_fera.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/produtos")
@@ -16,6 +21,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminProdutoController {
 
     private final ProdutoService produtoService;
+    private final MaterialService materialService;
+    private final CorService corService;
+    private final CategoriaService categoriaService;
+    private final ImageUploadService imageUploadService;
+
+    private void carregarAtributos(Model model) {
+        model.addAttribute("materiais", materialService.findAll());
+        model.addAttribute("cores", corService.findAll());
+        model.addAttribute("categorias", categoriaService.findAll());
+    }
 
     @GetMapping
     public String listar(Model model) {
@@ -23,18 +38,40 @@ public class AdminProdutoController {
         return "admin/produtos/listar";
     }
 
+    @GetMapping("/gerenciar-atributos")
+    public String gerenciarAtributos() {
+        return "admin/produtos/gerenciar-atributos";
+    }
+
     @GetMapping("/novo")
     public String novoForm(Model model) {
         model.addAttribute("produto", new Produto());
+        carregarAtributos(model);
         return "admin/produtos/form";
     }
 
     @PostMapping("/novo")
     public String criar(@Valid @ModelAttribute Produto produto,
                         BindingResult result,
-                        RedirectAttributes attrs) {
-        if (result.hasErrors()) return "admin/produtos/form";
+                        @RequestParam("imagens") List<MultipartFile> imagens,
+                        RedirectAttributes attrs,
+                        Model model) {
+        if (result.hasErrors()) {
+            carregarAtributos(model);
+            return "admin/produtos/form";
+        }
         try {
+            List<ImagemProd> imagensSalvas = new ArrayList<>();
+            for (MultipartFile imagem : imagens) {
+                if (!imagem.isEmpty()) {
+                    String urlImagem = imageUploadService.save(imagem);
+                    ImagemProd imagemProd = new ImagemProd();
+                    imagemProd.setUrlImagem(urlImagem);
+                    imagemProd.setProduto(produto);
+                    imagensSalvas.add(imagemProd);
+                }
+            }
+            produto.setImagens(imagensSalvas);
             produtoService.criar(produto);
             attrs.addFlashAttribute("sucesso", "Produto criado com sucesso!");
         } catch (RuntimeException e) {
@@ -46,6 +83,7 @@ public class AdminProdutoController {
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable Long id, Model model) {
         model.addAttribute("produto", produtoService.buscarPorId(id));
+        carregarAtributos(model);
         return "admin/produtos/form";
     }
 
@@ -53,9 +91,25 @@ public class AdminProdutoController {
     public String atualizar(@PathVariable Long id,
                             @Valid @ModelAttribute Produto produto,
                             BindingResult result,
-                            RedirectAttributes attrs) {
-        if (result.hasErrors()) return "admin/produtos/form";
+                            @RequestParam("imagens") List<MultipartFile> imagens,
+                            RedirectAttributes attrs,
+                            Model model) {
+        if (result.hasErrors()) {
+            carregarAtributos(model);
+            return "admin/produtos/form";
+        }
         try {
+            List<ImagemProd> imagensSalvas = new ArrayList<>();
+            for (MultipartFile imagem : imagens) {
+                if (!imagem.isEmpty()) {
+                    String urlImagem = imageUploadService.save(imagem);
+                    ImagemProd imagemProd = new ImagemProd();
+                    imagemProd.setUrlImagem(urlImagem);
+                    imagemProd.setProduto(produto);
+                    imagensSalvas.add(imagemProd);
+                }
+            }
+            produto.setImagens(imagensSalvas);
             produtoService.atualizar(id, produto);
             attrs.addFlashAttribute("sucesso", "Produto atualizado com sucesso!");
         } catch (RuntimeException e) {
