@@ -1,6 +1,8 @@
 package com.grupoum.projeto_fera.service;
 
+import com.grupoum.projeto_fera.model.Categoria;
 import com.grupoum.projeto_fera.model.Produto;
+import com.grupoum.projeto_fera.repository.CategoriaRepository;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final CategoriaRepository categoriaRepository;
 
     @Transactional(readOnly = true)
     public List<Produto> listarTodos() {
@@ -31,8 +34,10 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Produto> buscarPorCategoria(String categoria) {
-        return produtoRepository.findByCategoriaIgnoreCase(categoria);
+    public List<Produto> buscarPorCategoria(Long categoriaId) {
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + categoriaId));
+        return produtoRepository.findByCategoria(categoria);
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +72,6 @@ public class ProdutoService {
         produto.setCodigo(dados.getCodigo());
         produto.setPreco(dados.getPreco());
         produto.setEstoque(dados.getEstoque());
-        produto.setUnidadeMedida(dados.getUnidadeMedida());
         produto.setMateriais(dados.getMateriais());
         produto.setCores(dados.getCores());
         produto.setCategoria(dados.getCategoria());

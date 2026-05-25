@@ -17,6 +17,6 @@ public class Usuario extends Pessoa {
 
     @NotNull(message = "Role é obrigatória")
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name= "tipo_usuario",nullable = false, length = 20)
     private Role role;
 }

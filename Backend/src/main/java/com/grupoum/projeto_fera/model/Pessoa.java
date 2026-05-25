@@ -23,24 +23,24 @@ public abstract class Pessoa {
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
-    @Column(nullable = false, length = 100)
+    @Column(name= "nome",nullable = false, length = 100)
     private String nome;
 
     @NotBlank(message = "Email é obrigatório")
     @Email(message = "Email inválido")
-    @Column(nullable = false, unique = true, length = 150)
+    @Column(name= "email", nullable = false, unique = true, length = 150)
     private String email;
 
     // write-only: aceita no JSON de entrada, mas nunca serializa na resposta
     @NotBlank(message = "Senha é obrigatória")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(nullable = false)
+    @Column(name= "senha",nullable = false)
     private String senha;
 
     @Column(nullable = false)
     private boolean ativo = true;
 
-    @Column(name = "criado_em", nullable = false, updatable = false)
+    @Column(name = "data_cadastro", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
     @Column(name = "atualizado_em")

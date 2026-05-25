@@ -24,6 +24,7 @@ public class OrcamentoService {
 
     private final OrcamentoRepository orcamentoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ImageUploadService imageUploadService;
 
     @Transactional(readOnly = true)
     public List<Orcamento> listarTodos() {
@@ -48,6 +49,14 @@ public class OrcamentoService {
         return orcamentoRepository.countByStatus(status);
     }
 
+    public Orcamento criar(Orcamento orcamento, MultipartFile imagem) throws IOException {
+        if (imagem != null && !imagem.isEmpty()) {
+            String imagemPath = imageUploadService.save(imagem);
+            orcamento.setImagemPath(imagemPath);
+        }
+        return orcamentoRepository.save(orcamento);
+    }
+
     public Orcamento criar(String tipoMovel, String medidas, String observacoes,
                            MultipartFile imagem, String emailUsuario) throws IOException {
         Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
@@ -55,11 +64,7 @@ public class OrcamentoService {
 
         String imagemPath = null;
         if (imagem != null && !imagem.isEmpty()) {
-            String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
-            Path destino = Paths.get("uploads/" + nomeArquivo);
-            Files.createDirectories(destino.getParent());
-            Files.copy(imagem.getInputStream(), destino);
-            imagemPath = nomeArquivo;
+            imagemPath = imageUploadService.save(imagem);
         }
 
         Orcamento orcamento = Orcamento.builder()

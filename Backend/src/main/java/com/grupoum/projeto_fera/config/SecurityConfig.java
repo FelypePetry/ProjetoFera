@@ -55,6 +55,13 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll() // Permitir acesso aos endpoints de autenticação
 
+                // Admin: Apenas ADMIN e USER
+                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "USER")
+
+                // Minha Conta: Apenas CLIENTE
+                .requestMatchers("/minha-conta/**").hasRole("CLIENTE")
+
                 // Produtos: leitura para todos, escrita só ADMIN
                 .requestMatchers(HttpMethod.GET, "/api/produtos/**").hasAnyRole("USER", "ADMIN", "CLIENTE")
                 .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMIN")
@@ -67,9 +74,6 @@ public class SecurityConfig {
 
                 // Clientes: ADMIN pode gerenciar, CLIENTE pode ver/editar o seu
                 .requestMatchers("/api/clientes/**").hasAnyRole("ADMIN", "CLIENTE")
-
-                // Página Cliente: USER, ADMIN e CLIENTE
-                .requestMatchers("/cliente/**").hasAnyRole("USER", "ADMIN", "CLIENTE")
 
                 .anyRequest().authenticated()
             )

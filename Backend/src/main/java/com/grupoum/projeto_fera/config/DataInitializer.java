@@ -1,9 +1,11 @@
 package com.grupoum.projeto_fera.config;
 
+import com.grupoum.projeto_fera.model.Categoria;
 import com.grupoum.projeto_fera.model.Material;
 import com.grupoum.projeto_fera.model.Produto;
 import com.grupoum.projeto_fera.model.Role;
 import com.grupoum.projeto_fera.model.Usuario;
+import com.grupoum.projeto_fera.repository.CategoriaRepository;
 import com.grupoum.projeto_fera.repository.MaterialRepository;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import com.grupoum.projeto_fera.repository.UsuarioRepository;
@@ -24,6 +26,7 @@ public class DataInitializer implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final ProdutoRepository produtoRepository;
     private final MaterialRepository materialRepository;
+    private final CategoriaRepository categoriaRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -45,8 +48,17 @@ public class DataInitializer implements CommandLineRunner {
                     .ativo(true)
                     .build();
 
+            Usuario cliente = Usuario.builder()
+                    .nome("Théo")
+                    .email("theo@gmail.com")
+                    .senha(passwordEncoder.encode("user123"))
+                    .role(Role.ROLE_CLIENTE)
+                    .ativo(true)
+                    .build();
+
             usuarioRepository.save(admin);
             usuarioRepository.save(user);
+            usuarioRepository.save(cliente);
             log.info("✅ Usuários padrão criados: admin@metalurgica.com / admin123 | operador@metalurgica.com / user123");
         }
 
@@ -55,15 +67,18 @@ public class DataInitializer implements CommandLineRunner {
             Material aluminio = materialRepository.save(Material.builder().nome("Alumínio").build());
             Material ferro = materialRepository.save(Material.builder().nome("Ferro").build());
 
+            Categoria chapas = categoriaRepository.save(Categoria.builder().nome("Chapas").build());
+            Categoria tubos = categoriaRepository.save(Categoria.builder().nome("Tubos").build());
+            Categoria barras = categoriaRepository.save(Categoria.builder().nome("Barras").build());
+
             produtoRepository.save(Produto.builder()
                     .nome("Chapa de Aço Inox 304")
                     .descricao("Chapa de aço inoxidável 304, acabamento 2B")
                     .codigo("CHAPA-INOX-304")
                     .preco(new BigDecimal("850.00"))
                     .estoque(120)
-                    .unidadeMedida("m²")
                     .materiais(Set.of(acoInox))
-                    .categoria("Chapas")
+                    .categoria(chapas)
                     .ativo(true)
                     .build());
 
@@ -73,9 +88,8 @@ public class DataInitializer implements CommandLineRunner {
                     .codigo("TUBO-AL-1POL")
                     .preco(new BigDecimal("45.90"))
                     .estoque(500)
-                    .unidadeMedida("un")
                     .materiais(Set.of(aluminio))
-                    .categoria("Tubos")
+                    .categoria(tubos)
                     .ativo(true)
                     .build());
 
@@ -85,9 +99,8 @@ public class DataInitializer implements CommandLineRunner {
                     .codigo("BARRA-FE-1X316")
                     .preco(new BigDecimal("18.50"))
                     .estoque(300)
-                    .unidadeMedida("m")
                     .materiais(Set.of(ferro))
-                    .categoria("Barras")
+                    .categoria(barras)
                     .ativo(true)
                     .build());
 

@@ -8,7 +8,7 @@
 <body class="bg-gray-100">
 <div class="flex">
     <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
-    <main class="flex-1 p-8">
+    <main class="flex-1 p-8 ml-64">
         <div class="flex items-center gap-3 mb-6">
             <a th:href="@{/admin/produtos}" class="text-gray-500 hover:text-gray-800">← Voltar</a>
             <h1 class="text-2xl font-bold text-gray-800"
@@ -49,17 +49,11 @@
                                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Unidade de Medida *</label>
-                        <input type="text" th:field="*{unidadeMedida}" placeholder="ex: un, kg, m²"
-                               class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"/>
-                    </div>
-
                     <div class="col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                         <select th:field="*{categoria}" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="">Selecione uma categoria</option>
-                            <option th:each="cat : ${categorias}" th:value="${cat.nome}" th:text="${cat.nome}"></option>
+                            <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nome}"></option>
                         </select>
                     </div>
 

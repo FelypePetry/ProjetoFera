@@ -8,7 +8,7 @@
 <body class="bg-gray-100">
 <div class="flex">
     <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
-    <main class="flex-1 p-8">
+    <main class="flex-1 p-8 ml-64">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Produtos</h1>
             <a th:href="@{/admin/produtos/novo}"
@@ -39,7 +39,7 @@
                     <tr th:each="p : ${produtos}" class="border-t hover:bg-gray-50">
                         <td class="px-4 py-3 font-medium" th:text="${p.nome}">-</td>
                         <td class="px-4 py-3 text-gray-500" th:text="${p.codigo}">-</td>
-                        <td class="px-4 py-3" th:text="${p.categoria}">-</td>
+                        <td class="px-4 py-3" th:text="${p.categoria.nome}">-</td>
                         <td class="px-4 py-3">
                             <span th:each="mat, iter : ${p.materiais}" th:text="${mat.nome} + (${iter.last} ? '' : ', ')"></span>
                         </td>

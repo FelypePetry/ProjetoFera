@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,21 +15,39 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "feedbacks")
+@Table(name = "avaliacao")
 public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_avaliacao")
     private Long id;
 
-    @NotBlank(message = "Mensagem é obrigatória")
-    @Size(max = 1000, message = "Mensagem deve ter no máximo 1000 caracteres")
-    @Column(nullable = false, length = 1000)
-    private String mensagem;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_orcamento", nullable = false)
+    private Orcamento orcamento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nota", nullable = false)
+    private Nota nota;
+
+    @Column(name = "comentario", length = 255)
+    private String comentario;
+
+    @Column(name = "data_avaliacao")
+    private LocalDate dataAvaliacao;
+
+    @Column(name = "moderado")
+    private Boolean moderado;
+
+    // Enum para o campo nota
+    public enum Nota {
+        UM, DOIS, TRES, QUATRO, CINCO
+    }
 
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
@@ -36,5 +55,6 @@ public class Feedback {
     @PrePersist
     protected void onCreate() {
         criadoEm = LocalDateTime.now();
+        dataAvaliacao = LocalDate.now();
     }
 }

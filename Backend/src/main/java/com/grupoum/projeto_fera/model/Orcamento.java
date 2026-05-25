@@ -30,13 +30,13 @@ public class Orcamento {
     @Column(name = "tipo_movel", nullable = false, length = 100)
     private String tipoMovel;
 
-    @Column(length = 200)
+    @Column(name= "medidas",length = 200)
     private String medidas;
 
-    @Column(length = 1000)
+    @Column(name= "observacoes",length = 1000)
     private String observacoes;
 
-    @Column(name = "imagem_path", length = 300)
+    @Column(name = "imagem", length = 300)
     private String imagemPath;
 
     @Enumerated(EnumType.STRING)
@@ -47,7 +47,7 @@ public class Orcamento {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "criado_em", nullable = false, updatable = false)
+    @Column(name = "data_solicitacao", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
     @Column(name = "atualizado_em")
@@ -56,7 +56,6 @@ public class Orcamento {
     @Column(precision = 12, scale = 2)
     private BigDecimal valor;
 
-    @Column
     private Integer progresso = 0;
 
     public Integer getProgresso() {

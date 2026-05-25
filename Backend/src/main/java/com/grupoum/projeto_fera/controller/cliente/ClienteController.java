@@ -1,5 +1,6 @@
 package com.grupoum.projeto_fera.controller.cliente;
 
+import com.grupoum.projeto_fera.model.Feedback;
 import com.grupoum.projeto_fera.service.FeedbackService;
 import com.grupoum.projeto_fera.service.ClienteService;
 import com.grupoum.projeto_fera.service.OrcamentoService;
@@ -46,14 +47,17 @@ public class ClienteController {
     @GetMapping("/feedback")
     public String feedbackForm(Model model, Principal principal) {
         model.addAttribute("meusFeedbacks", feedbackService.listarPorUsuario(principal.getName()));
+        model.addAttribute("orcamentos", orcamentoService.listarPorUsuario(principal.getName()));
         return "cliente/feedback";
     }
 
     @PostMapping("/feedback")
-    public String enviarFeedback(@RequestParam String mensagem,
+    public String enviarFeedback(@RequestParam Long idOrcamento,
+                                 @RequestParam Feedback.Nota nota,
+                                 @RequestParam String comentario,
                                  Principal principal,
                                  RedirectAttributes attrs) {
-        feedbackService.criar(mensagem, principal.getName());
+        feedbackService.criar(idOrcamento, nota, comentario, principal.getName());
         attrs.addFlashAttribute("sucesso", "Feedback enviado! Obrigado.");
         return "redirect:/minha-conta/feedback";
     }

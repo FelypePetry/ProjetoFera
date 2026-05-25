@@ -1,5 +1,6 @@
 package com.grupoum.projeto_fera.repository;
 
+import com.grupoum.projeto_fera.model.Categoria;
 import com.grupoum.projeto_fera.model.Material;
 import com.grupoum.projeto_fera.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     List<Produto> findByAtivoTrue();
 
-    List<Produto> findByCategoriaIgnoreCase(String categoria);
+    List<Produto> findByCategoria(Categoria categoria);
 
     List<Produto> findByMateriais(Material materiais);
 
