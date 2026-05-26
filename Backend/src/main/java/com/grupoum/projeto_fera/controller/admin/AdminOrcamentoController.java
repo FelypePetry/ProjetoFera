@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,6 +26,11 @@ public class AdminOrcamentoController {
     private void carregarDadosParaForm(Model model) {
         model.addAttribute("usuarios", usuarioService.listarTodos());
         model.addAttribute("produtos", produtoService.listarTodos());
+    }
+
+    @InitBinder("orcamento")
+    public void initBinder(WebDataBinder binder) {
+        binder.setDisallowedFields("imagem");
     }
 
     @GetMapping

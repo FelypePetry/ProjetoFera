@@ -23,11 +23,11 @@ public class AdminController {
     public String dashboard(Model model) {
         model.addAttribute("totalProdutos", produtoService.contarTodos());
         model.addAttribute("totalUsuarios", usuarioService.contarTodos());
-        model.addAttribute("totalOrcamentos", orcamentoService.listarTodos().size());
+        var todosOrcamentos = orcamentoService.listarTodos();
+        model.addAttribute("totalOrcamentos", todosOrcamentos.size());
         model.addAttribute("emAnalise", orcamentoService.contarPorStatus(StatusOrcamento.EM_ANALISE));
         model.addAttribute("emProducao", orcamentoService.contarPorStatus(StatusOrcamento.EM_PRODUCAO));
-        model.addAttribute("orcamentosRecentes", orcamentoService.listarTodos()
-                .stream().limit(5).toList());
+        model.addAttribute("orcamentosRecentes", todosOrcamentos.stream().limit(5).toList());
         return "admin/dashboard";
     }
 }

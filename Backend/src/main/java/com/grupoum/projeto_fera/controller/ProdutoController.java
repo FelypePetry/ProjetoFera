@@ -42,14 +42,9 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorNome(nome));
     }
 
-    @GetMapping("/categoria/{id}")
-    public ResponseEntity<List<Produto>> buscarPorCategoria(@PathVariable Long id) {
-        return ResponseEntity.ok(produtoService.buscarPorCategoria(id));
-    }
-
     @PostMapping
     public ResponseEntity<Produto> criar(@Valid @RequestBody Produto produto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.criar(produto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.criar(produto, List.of()));
     }
 
     @PutMapping("/{id}")

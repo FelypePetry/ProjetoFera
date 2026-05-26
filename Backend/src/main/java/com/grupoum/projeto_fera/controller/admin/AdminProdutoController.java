@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,6 +27,11 @@ public class AdminProdutoController {
     private final CategoriaService categoriaService;
     private final ImageUploadService imageUploadService;
 
+    @InitBinder("produto")
+    public void initBinder(WebDataBinder binder) {
+        binder.setDisallowedFields("imagens"); // evita conflito com MultipartFile
+    }
+
     private void carregarAtributos(Model model) {
         model.addAttribute("materiais", materialService.findAll());
         model.addAttribute("cores", corService.findAll());
@@ -36,6 +42,12 @@ public class AdminProdutoController {
     public String listar(Model model) {
         model.addAttribute("produtos", produtoService.listarTodos());
         return "admin/produtos/listar";
+    }
+
+    @GetMapping("/{id}")
+    public String detalhe(@PathVariable Long id, Model model) {
+        model.addAttribute("produto", produtoService.buscarPorId(id));
+        return "admin/produtos/detalhe";
     }
 
     @GetMapping("/gerenciar-atributos")
@@ -57,25 +69,15 @@ public class AdminProdutoController {
                         RedirectAttributes attrs,
                         Model model) {
         if (result.hasErrors()) {
+            result.getAllErrors().forEach(e -> System.out.println("ERRO: " + e.getDefaultMessage()));
             carregarAtributos(model);
             return "admin/produtos/form";
         }
         try {
-            List<ImagemProd> imagensSalvas = new ArrayList<>();
-            for (MultipartFile imagem : imagens) {
-                if (!imagem.isEmpty()) {
-                    String urlImagem = imageUploadService.save(imagem);
-                    ImagemProd imagemProd = new ImagemProd();
-                    imagemProd.setUrlImagem(urlImagem);
-                    imagemProd.setProduto(produto);
-                    imagensSalvas.add(imagemProd);
-                }
-            }
-            produto.setImagens(imagensSalvas);
-            produtoService.criar(produto);
+            produtoService.criar(produto, imagens); // delega tudo ao service
             attrs.addFlashAttribute("sucesso", "Produto criado com sucesso!");
-        } catch (RuntimeException e) {
-            attrs.addFlashAttribute("erro", e.getMessage());
+        } catch (Exception e) {
+            attrs.addFlashAttribute("erro", "Erro ao criar produto: " + e.getMessage());
         }
         return "redirect:/admin/produtos";
     }
@@ -99,21 +101,20 @@ public class AdminProdutoController {
             return "admin/produtos/form";
         }
         try {
-            List<ImagemProd> imagensSalvas = new ArrayList<>();
+            List<ImagemProd> imagensParaSalvar = new ArrayList<>();
             for (MultipartFile imagem : imagens) {
                 if (!imagem.isEmpty()) {
                     String urlImagem = imageUploadService.save(imagem);
                     ImagemProd imagemProd = new ImagemProd();
                     imagemProd.setUrlImagem(urlImagem);
-                    imagemProd.setProduto(produto);
-                    imagensSalvas.add(imagemProd);
+                    imagensParaSalvar.add(imagemProd);
                 }
             }
-            produto.setImagens(imagensSalvas);
+            produto.setImagens(imagensParaSalvar);
             produtoService.atualizar(id, produto);
             attrs.addFlashAttribute("sucesso", "Produto atualizado com sucesso!");
-        } catch (RuntimeException e) {
-            attrs.addFlashAttribute("erro", e.getMessage());
+        } catch (Exception e) {
+            attrs.addFlashAttribute("erro", "Erro ao atualizar produto: " + e.getMessage());
         }
         return "redirect:/admin/produtos";
     }

@@ -1,13 +1,14 @@
 package com.grupoum.projeto_fera.service;
 
-import com.grupoum.projeto_fera.model.Categoria;
+import com.grupoum.projeto_fera.model.ImagemProd;
 import com.grupoum.projeto_fera.model.Produto;
-import com.grupoum.projeto_fera.repository.CategoriaRepository;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,7 +17,7 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
-    private final CategoriaRepository categoriaRepository;
+    private final ImageUploadService imageUploadService;
 
     @Transactional(readOnly = true)
     public List<Produto> listarTodos() {
@@ -34,13 +35,6 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Produto> buscarPorCategoria(Long categoriaId) {
-        Categoria categoria = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada com id: " + categoriaId));
-        return produtoRepository.findByCategoria(categoria);
-    }
-
-    @Transactional(readOnly = true)
     public Produto buscarPorId(Long id) {
         return findById(id);
     }
@@ -51,11 +45,26 @@ public class ProdutoService {
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado com código: " + codigo));
     }
 
-    public Produto criar(Produto produto) {
+    public Produto criar(Produto produto, List<MultipartFile> arquivos) {
         if (produtoRepository.existsByCodigo(produto.getCodigo())) {
             throw new RuntimeException("Código já cadastrado: " + produto.getCodigo());
         }
-        return produtoRepository.save(produto);
+
+        Produto salvo = produtoRepository.save(produto);
+
+        List<ImagemProd> imagens = new ArrayList<>();
+        for (MultipartFile arquivo : arquivos) {
+            if (!arquivo.isEmpty()) {
+                String url = imageUploadService.save(arquivo);
+                ImagemProd img = new ImagemProd();
+                img.setUrlImagem(url);
+                img.setProduto(salvo);
+                imagens.add(img);
+            }
+        }
+
+        salvo.setImagens(imagens);
+        return produtoRepository.save(salvo);
     }
 
     public long contarTodos(){
@@ -76,9 +85,14 @@ public class ProdutoService {
         produto.setCores(dados.getCores());
         produto.setCategoria(dados.getCategoria());
         produto.setAtivo(dados.isAtivo());
-        if (dados.getImagens() != null && !dados.getImagens().isEmpty()) {
-            produto.getImagens().clear();
-            produto.getImagens().addAll(dados.getImagens());
+
+        // Limpa a lista de imagens antigas e adiciona as novas
+        produto.getImagens().clear();
+        if (dados.getImagens() != null) {
+            dados.getImagens().forEach(img -> {
+                img.setProduto(produto); // Garante a associação bidirecional
+                produto.getImagens().add(img);
+            });
         }
         return produtoRepository.save(produto);
     }

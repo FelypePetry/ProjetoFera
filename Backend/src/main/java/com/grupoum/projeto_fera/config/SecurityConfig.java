@@ -1,6 +1,5 @@
 package com.grupoum.projeto_fera.config;
 
-import com.grupoum.projeto_fera.model.Role;
 import com.grupoum.projeto_fera.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +13,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -48,37 +47,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .headers(headers -> headers
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll() // Permitir acesso aos endpoints de autenticação
-
-                // Admin: Apenas ADMIN e USER
-                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
-                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "USER")
-
-                // Minha Conta: Apenas CLIENTE
-                .requestMatchers("/minha-conta/**").hasRole("CLIENTE")
-
-                // Produtos: leitura para todos, escrita só ADMIN
-                .requestMatchers(HttpMethod.GET, "/api/produtos/**").hasAnyRole("USER", "ADMIN", "CLIENTE")
-                .requestMatchers(HttpMethod.POST, "/api/produtos/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/produtos/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMIN")
-
-                // Usuários: apenas ADMIN
-                .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
-
-                // Clientes: ADMIN pode gerenciar, CLIENTE pode ver/editar o seu
-                .requestMatchers("/api/clientes/**").hasAnyRole("ADMIN", "CLIENTE")
-
-                .anyRequest().authenticated()
-            )
-            .httpBasic(Customizer.withDefaults())
-            .authenticationProvider(authenticationProvider());
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/login",
+                                "/error",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/uploads/**",
+                                "/webjars/**",
+                                "/h2-console/**",
+                                "/api/auth/**"
+                        ).permitAll()
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/minha-conta/**").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/admin/dashboard", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .authenticationProvider(authenticationProvider());
 
         return http.build();
     }

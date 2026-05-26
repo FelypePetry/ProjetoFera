@@ -1,9 +1,12 @@
 package com.grupoum.projeto_fera.controller.cliente;
 
 import com.grupoum.projeto_fera.model.Feedback;
-import com.grupoum.projeto_fera.service.FeedbackService;
+import com.grupoum.projeto_fera.model.Orcamento;
+import com.grupoum.projeto_fera.model.Usuario;
 import com.grupoum.projeto_fera.service.ClienteService;
+import com.grupoum.projeto_fera.service.FeedbackService;
 import com.grupoum.projeto_fera.service.OrcamentoService;
+import com.grupoum.projeto_fera.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,11 +28,12 @@ public class ClienteController {
     private final ClienteService clienteService;
     private final OrcamentoService orcamentoService;
     private final FeedbackService feedbackService;
+    private final UsuarioService usuarioService;
 
     @GetMapping
     public String minhaConta(Model model, Principal principal) {
         model.addAttribute("cliente", clienteService.buscarPorEmail(principal.getName()));
-        return "cliente/perfil"; // Sugestão: usar um nome de view mais específico
+        return "cliente/perfil";
     }
 
     @GetMapping("/pedidos")
@@ -74,7 +78,14 @@ public class ClienteController {
                                   @RequestParam(required = false) MultipartFile imagem,
                                   Principal principal,
                                   RedirectAttributes attrs) throws IOException {
-        orcamentoService.criar(tipoMovel, medidas, observacoes, imagem, principal.getName());
+        Usuario usuario = usuarioService.buscarPorEmail(principal.getName());
+        Orcamento orcamento = Orcamento.builder()
+                .tipoMovel(tipoMovel)
+                .medidas(medidas)
+                .observacoes(observacoes)
+                .usuario(usuario)
+                .build();
+        orcamentoService.criar(orcamento, imagem);
         attrs.addFlashAttribute("sucesso", "Orçamento enviado com sucesso!");
         return "redirect:/minha-conta/pedidos";
     }

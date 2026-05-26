@@ -50,31 +50,11 @@ public class OrcamentoService {
     }
 
     public Orcamento criar(Orcamento orcamento, MultipartFile imagem) throws IOException {
-        if (imagem != null && !imagem.isEmpty()) {
-            String imagemPath = imageUploadService.save(imagem);
-            orcamento.setImagemPath(imagemPath);
-        }
-        return orcamentoRepository.save(orcamento);
-    }
-
-    public Orcamento criar(String tipoMovel, String medidas, String observacoes,
-                           MultipartFile imagem, String emailUsuario) throws IOException {
-        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
         String imagemPath = null;
         if (imagem != null && !imagem.isEmpty()) {
             imagemPath = imageUploadService.save(imagem);
         }
-
-        Orcamento orcamento = Orcamento.builder()
-                .tipoMovel(tipoMovel)
-                .medidas(medidas)
-                .observacoes(observacoes)
-                .imagemPath(imagemPath)
-                .usuario(usuario)
-                .build();
-
+        orcamento.setImagemPath(imagemPath);
         return orcamentoRepository.save(orcamento);
     }
 

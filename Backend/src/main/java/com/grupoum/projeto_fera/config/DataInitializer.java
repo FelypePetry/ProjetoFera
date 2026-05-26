@@ -1,14 +1,11 @@
 package com.grupoum.projeto_fera.config;
 
-import com.grupoum.projeto_fera.model.Categoria;
-import com.grupoum.projeto_fera.model.Material;
-import com.grupoum.projeto_fera.model.Produto;
-import com.grupoum.projeto_fera.model.Role;
-import com.grupoum.projeto_fera.model.Usuario;
+import com.grupoum.projeto_fera.model.*;
 import com.grupoum.projeto_fera.repository.CategoriaRepository;
 import com.grupoum.projeto_fera.repository.MaterialRepository;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import com.grupoum.projeto_fera.repository.UsuarioRepository;
+import com.grupoum.projeto_fera.repository.CorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -27,6 +24,7 @@ public class DataInitializer implements CommandLineRunner {
     private final ProdutoRepository produtoRepository;
     private final MaterialRepository materialRepository;
     private final CategoriaRepository categoriaRepository;
+    private final CorRepository corRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -70,6 +68,9 @@ public class DataInitializer implements CommandLineRunner {
             Categoria chapas = categoriaRepository.save(Categoria.builder().nome("Chapas").build());
             Categoria tubos = categoriaRepository.save(Categoria.builder().nome("Tubos").build());
             Categoria barras = categoriaRepository.save(Categoria.builder().nome("Barras").build());
+
+            Cor cinza = corRepository.save(Cor.builder().nome("Cinza").build());
+            Cor preto = corRepository.save(Cor.builder().nome("Preto").build());
 
             produtoRepository.save(Produto.builder()
                     .nome("Chapa de Aço Inox 304")
