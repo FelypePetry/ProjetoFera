@@ -53,8 +53,12 @@ public class AdminOrcamentoController {
                         RedirectAttributes attrs,
                         Model model) {
         if (result.hasErrors()) {
-            carregarDadosParaForm(model);
-            return "admin/orcamentos/form";
+            result.getFieldErrors().forEach(error ->
+                System.out.println("ERRO NO CAMPO: " + error.getField() + " - MOTIVO: " + error.getDefaultMessage())
+        );
+
+        carregarDadosParaForm(model);
+        return "admin/orcamentos/form";
         }
         try {
             orcamentoService.criar(orcamento, imagem);

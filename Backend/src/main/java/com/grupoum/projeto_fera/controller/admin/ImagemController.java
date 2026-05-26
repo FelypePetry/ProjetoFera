@@ -18,7 +18,7 @@ public class ImagemController {
 
     @PostMapping("/upload")
     public ResponseEntity<ImagemProd> uploadImage(@RequestParam("file") MultipartFile file) {
-        String filename = imageUploadService.save(file);
+        String filename = imageUploadService.save(file, "produtos");
         ImagemProd imagemProd = new ImagemProd();
         imagemProd.setUrlImagem(filename);
         ImagemProd savedImage = imagemProdRepository.save(imagemProd);

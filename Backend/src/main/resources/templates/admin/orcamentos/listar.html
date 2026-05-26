@@ -26,7 +26,6 @@
                         <th class="px-4 py-3">#</th>
                         <th class="px-4 py-3">Tipo de Móvel</th>
                         <th class="px-4 py-3">Cliente</th>
-                        <th class="px-4 py-3">Cidade</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Data</th>
                         <th class="px-4 py-3">Ações</th>
@@ -37,7 +36,6 @@
                         <td class="px-4 py-3 text-gray-400" th:text="${orc.id}">-</td>
                         <td class="px-4 py-3 font-medium" th:text="${orc.tipoMovel}">-</td>
                         <td class="px-4 py-3" th:text="${orc.usuario.nome}">-</td>
-                        <td class="px-4 py-3" th:text="${orc.usuario.cidade ?: '-'}">-</td>
                         <td class="px-4 py-3">
                             <span th:text="${orc.status}"
                                   th:classappend="${orc.status.name() == 'PENDENTE'} ? 'bg-gray-100 text-gray-700' :
@@ -60,7 +58,7 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(orcamentos)}">
-                        <td colspan="7" class="px-4 py-8 text-center text-gray-400">Nenhum orçamento ainda.</td>
+                        <td colspan="6" class="px-4 py-8 text-center text-gray-400">Nenhum orçamento ainda.</td>
                     </tr>
                 </tbody>
             </table>

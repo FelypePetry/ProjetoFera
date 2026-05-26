@@ -1,10 +1,7 @@
 package com.grupoum.projeto_fera.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
@@ -15,11 +12,15 @@ import lombok.NoArgsConstructor;
 @IdClass(OrcamentoProdutoId.class)
 public class OrcamentoProduto {
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Id
     @ManyToOne
     @JoinColumn(name = "orcamento_id")
     private Orcamento orcamento;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Id
     @ManyToOne
     @JoinColumn(name = "produto_id")

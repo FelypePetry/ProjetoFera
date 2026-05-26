@@ -2,13 +2,11 @@ package com.grupoum.projeto_fera.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,8 +21,10 @@ public class Orcamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrcamentoProduto> orcamentoProdutos;
+    private Set<OrcamentoProduto> orcamentoProdutos = new java.util.HashSet<>();
 
     @NotBlank(message = "Tipo de móvel é obrigatório")
     @Column(name = "tipo_movel", nullable = false, length = 100)
@@ -41,7 +41,7 @@ public class Orcamento {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private StatusOrcamento status;
+    private StatusOrcamento status = StatusOrcamento.PENDENTE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -59,6 +59,9 @@ public class Orcamento {
     private Integer progresso = 0;
 
     public Integer getProgresso() {
+        if (this.status == null) {
+            return 0;
+        }
         return switch (this.status) {
             case PENDENTE -> 10;
             case EM_ANALISE -> 30;
@@ -69,11 +72,13 @@ public class Orcamento {
         };
     }
 
+    @Transient
+    private List<Long> produtosSelecionadosIds;
+
     @PrePersist
     protected void onCreate() {
         criadoEm = LocalDateTime.now();
         atualizadoEm = LocalDateTime.now();
-        status = StatusOrcamento.PENDENTE;
     }
 
     @PreUpdate

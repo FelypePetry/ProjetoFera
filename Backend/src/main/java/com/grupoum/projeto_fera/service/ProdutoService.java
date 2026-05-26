@@ -55,7 +55,7 @@ public class ProdutoService {
         List<ImagemProd> imagens = new ArrayList<>();
         for (MultipartFile arquivo : arquivos) {
             if (!arquivo.isEmpty()) {
-                String url = imageUploadService.save(arquivo);
+                String url = imageUploadService.save(arquivo, "produtos");
                 ImagemProd img = new ImagemProd();
                 img.setUrlImagem(url);
                 img.setProduto(salvo);

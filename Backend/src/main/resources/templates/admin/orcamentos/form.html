@@ -44,7 +44,7 @@
 
                     <div class="col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Produtos</label>
-                        <select th:field="*{orcamentoProdutos}" multiple class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <select th:field="*{produtosSelecionadosIds}" multiple class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option th:each="p : ${produtos}" th:value="${p.id}" th:text="${p.nome}"></option>
                         </select>
                     </div>

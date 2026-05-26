@@ -104,7 +104,7 @@ public class AdminProdutoController {
             List<ImagemProd> imagensParaSalvar = new ArrayList<>();
             for (MultipartFile imagem : imagens) {
                 if (!imagem.isEmpty()) {
-                    String urlImagem = imageUploadService.save(imagem);
+                    String urlImagem = imageUploadService.save(imagem, "produtos");
                     ImagemProd imagemProd = new ImagemProd();
                     imagemProd.setUrlImagem(urlImagem);
                     imagensParaSalvar.add(imagemProd);

@@ -22,7 +22,7 @@ public class ImageUploadService {
         }
     }
 
-    public String save(MultipartFile file) {
+    public String save(MultipartFile file, String subpasta) {
         try {
             String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             Files.copy(file.getInputStream(), this.root.resolve(filename));

@@ -4,6 +4,8 @@
     <meta charset="UTF-8"/>
     <title>Usuário - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Adiciona a biblioteca iMask.js -->
+    <script src="https://unpkg.com/imask"></script>
 </head>
 <body class="bg-gray-100">
 <div class="flex">
@@ -74,5 +76,18 @@
         </div>
     </main>
 </div>
+
+<!-- Script para aplicar as máscaras -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            IMask(emailInput, {
+                mask: /^[\\w\\.-]+@([\\w\\-]+\\.)+[\\w]{2,4}$/
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

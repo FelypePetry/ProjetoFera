@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface OrcamentoRepository extends JpaRepository<Orcamento, Long> {
     List<Orcamento> findByUsuario(Usuario usuario);
-    List<Orcamento> findByStatus(StatusOrcamento status);
     List<Orcamento> findAllByOrderByCriadoEmDesc();
     long countByStatus(StatusOrcamento status);
 }
