@@ -1,6 +1,5 @@
 package com.grupoum.projeto_fera.service;
 
-import com.grupoum.projeto_fera.model.ImagemProd;
 import com.grupoum.projeto_fera.model.Produto;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,25 +47,10 @@ public class ProdutoService {
         if (produtoRepository.existsByCodigo(produto.getCodigo())) {
             throw new RuntimeException("Código já cadastrado: " + produto.getCodigo());
         }
-
-        Produto salvo = produtoRepository.save(produto);
-
-        List<ImagemProd> imagens = new ArrayList<>();
-        for (MultipartFile arquivo : arquivos) {
-            if (!arquivo.isEmpty()) {
-                String url = imageUploadService.save(arquivo, "produtos");
-                ImagemProd img = new ImagemProd();
-                img.setUrlImagem(url);
-                img.setProduto(salvo);
-                imagens.add(img);
-            }
-        }
-
-        salvo.setImagens(imagens);
-        return produtoRepository.save(salvo);
+        return produtoRepository.save(produto);
     }
 
-    public long contarTodos(){
+    public long contarTodos() {
         return produtoRepository.count();
     }
 
@@ -81,19 +64,12 @@ public class ProdutoService {
         produto.setCodigo(dados.getCodigo());
         produto.setPreco(dados.getPreco());
         produto.setEstoque(dados.getEstoque());
-        produto.setMateriais(dados.getMateriais());
-        produto.setCores(dados.getCores());
+        produto.setUnidadeMedida(dados.getUnidadeMedida());
+        produto.setMaterial(dados.getMaterial());
         produto.setCategoria(dados.getCategoria());
         produto.setAtivo(dados.isAtivo());
-
-        // Limpa a lista de imagens antigas e adiciona as novas
-        produto.getImagens().clear();
-        if (dados.getImagens() != null) {
-            dados.getImagens().forEach(img -> {
-                img.setProduto(produto); // Garante a associação bidirecional
-                produto.getImagens().add(img);
-            });
-        }
+        produto.setMaisVendido(dados.isMaisVendido());
+        produto.setDestaque(dados.isDestaque());
         return produtoRepository.save(produto);
     }
 

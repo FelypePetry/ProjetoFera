@@ -23,7 +23,7 @@ public class FeedbackService {
 
     @Transactional(readOnly = true)
     public List<Feedback> listarTodos() {
-        return feedbackRepository.findAllByOrderByCriadoEmDesc();
+        return feedbackRepository.findAllByOrderByDataAvaliacaoDesc();
     }
 
     @Transactional(readOnly = true)

@@ -1,11 +1,7 @@
 package com.grupoum.projeto_fera.config;
 
 import com.grupoum.projeto_fera.model.*;
-import com.grupoum.projeto_fera.repository.CategoriaRepository;
-import com.grupoum.projeto_fera.repository.MaterialRepository;
-import com.grupoum.projeto_fera.repository.ProdutoRepository;
-import com.grupoum.projeto_fera.repository.UsuarioRepository;
-import com.grupoum.projeto_fera.repository.CorRepository;
+import com.grupoum.projeto_fera.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -30,56 +25,60 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (usuarioRepository.count() == 0) {
-            Usuario admin = Usuario.builder()
+            usuarioRepository.save(Usuario.builder()
                     .nome("Administrador")
                     .email("admin@metalurgica.com")
                     .senha(passwordEncoder.encode("admin123"))
                     .role(Role.ROLE_ADMIN)
                     .ativo(true)
-                    .build();
+                    .build());
 
-            Usuario user = Usuario.builder()
+            usuarioRepository.save(Usuario.builder()
                     .nome("Operador")
                     .email("operador@metalurgica.com")
                     .senha(passwordEncoder.encode("user123"))
                     .role(Role.ROLE_USER)
                     .ativo(true)
-                    .build();
+                    .build());
 
-            Usuario cliente = Usuario.builder()
+            usuarioRepository.save(Usuario.builder()
                     .nome("Théo")
                     .email("theo@gmail.com")
                     .senha(passwordEncoder.encode("user123"))
                     .role(Role.ROLE_CLIENTE)
                     .ativo(true)
-                    .build();
+                    .build());
 
-            usuarioRepository.save(admin);
-            usuarioRepository.save(user);
-            usuarioRepository.save(cliente);
-            log.info("✅ Usuários padrão criados: admin@metalurgica.com / admin123 | operador@metalurgica.com / user123");
+            log.info("Usuários padrão criados: admin@metalurgica.com / admin123 | operador@metalurgica.com / user123");
+        }
+
+        if (materialRepository.count() == 0) {
+            materialRepository.save(Material.builder().nome("Aço Inox 304").build());
+            materialRepository.save(Material.builder().nome("Alumínio").build());
+            materialRepository.save(Material.builder().nome("Ferro").build());
+        }
+
+        if (categoriaRepository.count() == 0) {
+            categoriaRepository.save(Categoria.builder().nome("Chapas").build());
+            categoriaRepository.save(Categoria.builder().nome("Tubos").build());
+            categoriaRepository.save(Categoria.builder().nome("Barras").build());
+        }
+
+        if (corRepository.count() == 0) {
+            corRepository.save(Cor.builder().nome("Cinza").build());
+            corRepository.save(Cor.builder().nome("Preto").build());
         }
 
         if (produtoRepository.count() == 0) {
-            Material acoInox = materialRepository.save(Material.builder().nome("Aço Inox 304").build());
-            Material aluminio = materialRepository.save(Material.builder().nome("Alumínio").build());
-            Material ferro = materialRepository.save(Material.builder().nome("Ferro").build());
-
-            Categoria chapas = categoriaRepository.save(Categoria.builder().nome("Chapas").build());
-            Categoria tubos = categoriaRepository.save(Categoria.builder().nome("Tubos").build());
-            Categoria barras = categoriaRepository.save(Categoria.builder().nome("Barras").build());
-
-            Cor cinza = corRepository.save(Cor.builder().nome("Cinza").build());
-            Cor preto = corRepository.save(Cor.builder().nome("Preto").build());
-
             produtoRepository.save(Produto.builder()
                     .nome("Chapa de Aço Inox 304")
                     .descricao("Chapa de aço inoxidável 304, acabamento 2B")
                     .codigo("CHAPA-INOX-304")
                     .preco(new BigDecimal("850.00"))
                     .estoque(120)
-                    .materiais(Set.of(acoInox))
-                    .categoria(chapas)
+                    .unidadeMedida("m²")
+                    .material("Aço Inox 304")
+                    .categoria("Chapas")
                     .ativo(true)
                     .build());
 
@@ -89,8 +88,9 @@ public class DataInitializer implements CommandLineRunner {
                     .codigo("TUBO-AL-1POL")
                     .preco(new BigDecimal("45.90"))
                     .estoque(500)
-                    .materiais(Set.of(aluminio))
-                    .categoria(tubos)
+                    .unidadeMedida("un")
+                    .material("Alumínio")
+                    .categoria("Tubos")
                     .ativo(true)
                     .build());
 
@@ -100,12 +100,13 @@ public class DataInitializer implements CommandLineRunner {
                     .codigo("BARRA-FE-1X316")
                     .preco(new BigDecimal("18.50"))
                     .estoque(300)
-                    .materiais(Set.of(ferro))
-                    .categoria(barras)
+                    .unidadeMedida("m")
+                    .material("Ferro")
+                    .categoria("Barras")
                     .ativo(true)
                     .build());
 
-            log.info("✅ Produtos de exemplo criados!");
+            log.info("Produtos de exemplo criados!");
         }
     }
 }

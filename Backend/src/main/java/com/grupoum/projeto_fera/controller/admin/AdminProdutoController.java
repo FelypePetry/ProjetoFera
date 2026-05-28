@@ -1,6 +1,5 @@
 package com.grupoum.projeto_fera.controller.admin;
 
-import com.grupoum.projeto_fera.model.ImagemProd;
 import com.grupoum.projeto_fera.model.Produto;
 import com.grupoum.projeto_fera.service.*;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,7 +27,7 @@ public class AdminProdutoController {
 
     @InitBinder("produto")
     public void initBinder(WebDataBinder binder) {
-        binder.setDisallowedFields("imagens"); // evita conflito com MultipartFile
+        binder.setDisallowedFields("orcamentoProdutos");
     }
 
     private void carregarAtributos(Model model) {
@@ -74,7 +72,7 @@ public class AdminProdutoController {
             return "admin/produtos/form";
         }
         try {
-            produtoService.criar(produto, imagens); // delega tudo ao service
+            produtoService.criar(produto, imagens);
             attrs.addFlashAttribute("sucesso", "Produto criado com sucesso!");
         } catch (Exception e) {
             attrs.addFlashAttribute("erro", "Erro ao criar produto: " + e.getMessage());
@@ -101,16 +99,6 @@ public class AdminProdutoController {
             return "admin/produtos/form";
         }
         try {
-            List<ImagemProd> imagensParaSalvar = new ArrayList<>();
-            for (MultipartFile imagem : imagens) {
-                if (!imagem.isEmpty()) {
-                    String urlImagem = imageUploadService.save(imagem, "produtos");
-                    ImagemProd imagemProd = new ImagemProd();
-                    imagemProd.setUrlImagem(urlImagem);
-                    imagensParaSalvar.add(imagemProd);
-                }
-            }
-            produto.setImagens(imagensParaSalvar);
             produtoService.atualizar(id, produto);
             attrs.addFlashAttribute("sucesso", "Produto atualizado com sucesso!");
         } catch (Exception e) {

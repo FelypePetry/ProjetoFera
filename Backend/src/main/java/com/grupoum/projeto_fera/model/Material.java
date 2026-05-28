@@ -18,6 +18,7 @@ public class Material {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_material")
     private Long id;
 
     @Column(name= "nome_material",nullable = false, unique = true, length = 100)

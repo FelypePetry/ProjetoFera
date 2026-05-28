@@ -17,9 +17,10 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_categoria")
     private Long id;
 
-    @Column(name = "nome_categoria", length = 50)
+    @Column(name = "nome_categoria", length = 100)
     private String nome;
 
     @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")

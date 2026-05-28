@@ -21,6 +21,7 @@ public class Orcamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,9 +37,10 @@ public class Orcamento {
     @Column(name= "observacoes",length = 1000)
     private String observacoes;
 
-    @Column(name = "imagem", length = 300)
+    @Column(name = "imagem_path", length = 300)
     private String imagemPath;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private StatusOrcamento status = StatusOrcamento.PENDENTE;
@@ -47,7 +49,7 @@ public class Orcamento {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "data_solicitacao", nullable = false, updatable = false)
+    @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
     @Column(name = "atualizado_em")
@@ -56,6 +58,7 @@ public class Orcamento {
     @Column(precision = 12, scale = 2)
     private BigDecimal valor;
 
+    @Builder.Default
     private Integer progresso = 0;
 
     public Integer getProgresso() {

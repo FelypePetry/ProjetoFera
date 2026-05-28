@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -37,10 +38,11 @@ public abstract class Pessoa {
     @Column(name= "senha",nullable = false)
     private String senha;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean ativo = true;
 
-    @Column(name = "data_cadastro", nullable = false, updatable = false)
+    @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
 
     @Column(name = "atualizado_em")

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByUsuario(Usuario usuario);
-    List<Feedback> findAllByOrderByCriadoEmDesc();
+    List<Feedback> findAllByOrderByDataAvaliacaoDesc();
 }

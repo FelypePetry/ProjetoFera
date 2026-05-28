@@ -1,14 +1,12 @@
 package com.grupoum.projeto_fera.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -31,30 +29,27 @@ public class Feedback {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "nota", nullable = false)
+    @Convert(converter = NotaConverter.class)
+    @Column(name = "nota", nullable = false, columnDefinition = "nota_enum")
     private Nota nota;
 
-    @Column(name = "comentario", length = 255)
+    @Column(name = "comentario", length = 500)
     private String comentario;
 
     @Column(name = "data_avaliacao")
     private LocalDate dataAvaliacao;
 
+    @Builder.Default
     @Column(name = "moderado")
-    private Boolean moderado;
+    private Boolean moderado = false;
 
-    // Enum para o campo nota
     public enum Nota {
         UM, DOIS, TRES, QUATRO, CINCO
     }
 
-    @Column(name = "criado_em", nullable = false, updatable = false)
-    private LocalDateTime criadoEm;
-
     @PrePersist
     protected void onCreate() {
-        criadoEm = LocalDateTime.now();
         dataAvaliacao = LocalDate.now();
+        if (moderado == null) moderado = false;
     }
 }

@@ -1,13 +1,12 @@
 package com.grupoum.projeto_fera.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -22,43 +21,19 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_categoria")
-    private Categoria categoria;
-
+    @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrcamentoProduto> orcamentoProdutos;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImagemProd> imagens;
-
-    @ManyToMany
-    @JoinTable(
-        name = "prod_material",
-        joinColumns = @JoinColumn(name = "id_produto"),
-        inverseJoinColumns = @JoinColumn(name = "id_material")
-    )
-    private Set<Material> materiais;
-
-    @ManyToMany
-    @JoinTable(
-            name = "prod_cor",
-            joinColumns = @JoinColumn(name = "id_produto"),
-            inverseJoinColumns = @JoinColumn(name = "id_cor")
-    )
-    private Set<Cor> cores;
+    private Set<OrcamentoProduto> orcamentoProdutos = new HashSet<>();
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(min = 2, max = 150, message = "Nome deve ter entre 2 e 150 caracteres")
-    @Column(name= "nome_produto",nullable = false, length = 150)
+    @Column(name = "nome", nullable = false, length = 150)
     private String nome;
 
     @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
-    @Column(name= "descricao",length = 500)
+    @Column(name = "descricao", length = 500)
     private String descricao;
 
     @NotBlank(message = "Código do produto é obrigatório")
@@ -76,6 +51,17 @@ public class Produto {
     @Column(name = "estoque", nullable = false)
     private Integer estoque;
 
+    @NotBlank(message = "Unidade de medida é obrigatória")
+    @Column(name = "unidade_medida", nullable = false, length = 20)
+    private String unidadeMedida;
+
+    @Column(name = "material", length = 100)
+    private String material;
+
+    @Column(name = "categoria", length = 100)
+    private String categoria;
+
+    @Builder.Default
     @Column(nullable = false)
     private boolean ativo = true;
 
@@ -85,9 +71,11 @@ public class Produto {
     @Column(name = "atualizado_em")
     private LocalDateTime atualizadoEm;
 
+    @Builder.Default
     @Column(name = "mais_vendido", nullable = false)
     private boolean maisVendido = false;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean destaque = false;
 

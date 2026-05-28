@@ -16,6 +16,7 @@ public class Cor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cor")
     private Long id;
 
     @Column(name = "nome_cor", length = 50)
