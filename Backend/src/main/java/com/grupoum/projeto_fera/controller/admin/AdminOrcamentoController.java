@@ -55,10 +55,9 @@ public class AdminOrcamentoController {
         if (result.hasErrors()) {
             result.getFieldErrors().forEach(error ->
                 System.out.println("ERRO NO CAMPO: " + error.getField() + " - MOTIVO: " + error.getDefaultMessage())
-        );
-
-        carregarDadosParaForm(model);
-        return "admin/orcamentos/form";
+            );
+            carregarDadosParaForm(model);
+            return "admin/orcamentos/form";
         }
         try {
             orcamentoService.criar(orcamento, imagem);
