@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gerenciar Atributos - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div class="flex">
+    <div th:replace="~{fragments/admin-layout :: sidebar}"></div>
+    <main class="flex-1 p-8 ml-64">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Gerenciar Atributos de Produtos</h1>
+
+        <!-- Seção de Cores -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Cores</h2>
+            <div class="bg-white rounded-xl shadow p-6">
+                <form id="form-cor" class="flex gap-4 mb-4">
+                    <input type="text" name="nome" placeholder="Nova cor" class="flex-1 border-gray-300 rounded-md shadow-sm" required>
+                    <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">Adicionar</button>
+                </form>
+                <table class="w-full text-sm">
+                    <tbody id="lista-cores">
+                    <!-- Cores serão inseridas aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Seção de Categorias -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Categorias</h2>
+            <div class="bg-white rounded-xl shadow p-6">
+                <form id="form-categoria" class="flex gap-4 mb-4">
+                    <input type="text" name="nome" placeholder="Nova categoria" class="flex-1 border-gray-300 rounded-md shadow-sm" required>
+                    <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">Adicionar</button>
+                </form>
+                <table class="w-full text-sm">
+                    <tbody id="lista-categorias">
+                    <!-- Categorias serão inseridas aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Seção de Materiais -->
+        <div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Materiais</h2>
+            <div class="bg-white rounded-xl shadow p-6">
+                <form id="form-material" class="flex gap-4 mb-4">
+                    <input type="text" name="nome" placeholder="Novo material" class="flex-1 border-gray-300 rounded-md shadow-sm" required>
+                    <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">Adicionar</button>
+                </form>
+                <table class="w-full text-sm">
+                    <tbody id="lista-materiais">
+                    <!-- Materiais serão inseridos aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const setupAttributeSection = (attributeName, formId, listId, apiUrl) => {
+            const form = document.getElementById(formId);
+            const list = document.getElementById(listId);
+
+            const loadItems = async () => {
+                const response = await fetch(apiUrl);
+                const items = await response.json();
+                list.innerHTML = '';
+                items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="px-4 py-2">${item.nome}</td>
+                        <td class="px-4 py-2 text-right">
+                            <button class="text-red-600 hover:underline" onclick="deleteItem(${item.id}, '${attributeName}')">Remover</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+            };
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const data = { nome: formData.get('nome') };
+
+                await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                form.reset();
+                loadItems();
+            });
+
+            window.deleteItem = async (id, attrName) => {
+                if (attrName !== attributeName) return;
+                if (confirm(`Tem certeza que deseja remover este item?`)) {
+                    await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+                    loadItems();
+                }
+            };
+
+            loadItems();
+        };
+
+        setupAttributeSection('cor', 'form-cor', 'lista-cores', '/api/admin/cores');
+        setupAttributeSection('categoria', 'form-categoria', 'lista-categorias', '/api/admin/categorias');
+        setupAttributeSection('material', 'form-material', 'lista-materiais', '/api/admin/materiais');
+    });
+</script>
+
+</body>
+</html>

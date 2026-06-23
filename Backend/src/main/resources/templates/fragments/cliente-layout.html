@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- SIDEBAR -->
+<div th:fragment="sidebar">
+    <aside class="w-64 bg-gray-800 min-h-screen p-4 flex flex-col gap-2 fixed h-full">
+        <div class="text-white font-bold text-lg mb-6 px-2">Minha Conta</div>
+        <a th:href="@{/minha-conta}"
+           class="flex items-center gap-2 px-3 py-2 rounded text-gray-300 hover:bg-gray-700">
+            Meu Perfil
+        </a>
+        <a th:href="@{/minha-conta/pedidos}"
+           class="flex items-center gap-2 px-3 py-2 rounded text-gray-300 hover:bg-gray-700">
+            Meus Pedidos
+        </a>
+        <a th:href="@{/minha-conta/historico}"
+           class="flex items-center gap-2 px-3 py-2 rounded text-gray-300 hover:bg-gray-700">
+            Histórico
+        </a>
+        <a th:href="@{/minha-conta/feedback}"
+           class="flex items-center gap-2 px-3 py-2 rounded text-gray-300 hover:bg-gray-700">
+            Feedback
+        </a>
+        <a th:href="@{/minha-conta/orcamento}"
+           class="flex items-center gap-2 px-3 py-2 rounded text-gray-300 hover:bg-gray-700">
+            Novo Orçamento
+        </a>
+        <div class="mt-auto">
+            <a th:href="@{/}" class="text-gray-400 text-sm hover:text-white">← Voltar ao site</a>
+        </div>
+    </aside>
+</div>
+
+</html>
