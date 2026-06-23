@@ -31,8 +31,8 @@ public class AdminProdutoController {
     }
 
     private void carregarAtributos(Model model) {
-        model.addAttribute("materiais_lista", materialService.findAll());
-        model.addAttribute("cores_lista", corService.findAll());
+        model.addAttribute("materiais", materialService.findAll());
+        model.addAttribute("cores", corService.findAll());
         model.addAttribute("categorias", categoriaService.findAll());
     }
 

@@ -48,6 +48,7 @@
                     <tr>
                         <th class="pb-2">Tipo de Móvel</th>
                         <th class="pb-2">Cliente</th>
+                        <th class="pb-2">Cidade</th>
                         <th class="pb-2">Status</th>
                         <th class="pb-2">Data</th>
                         <th class="pb-2"></th>
@@ -58,6 +59,7 @@
                         class="border-b last:border-0 hover:bg-gray-50">
                         <td class="py-3 font-medium" th:text="${orc.tipoMovel}">-</td>
                         <td class="py-3" th:text="${orc.usuario.nome}">-</td>
+                        <td class="py-3" th:text="${orc.usuario.cidade}">-</td>
                         <td class="py-3">
                             <span th:text="${orc.status}"
                                   th:classappend="${orc.status.name() == 'PENDENTE'} ? 'bg-gray-100 text-gray-700' :

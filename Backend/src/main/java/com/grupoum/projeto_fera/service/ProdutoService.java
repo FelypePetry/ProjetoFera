@@ -1,7 +1,5 @@
 package com.grupoum.projeto_fera.service;
 
-import com.grupoum.projeto_fera.model.Cor;
-import com.grupoum.projeto_fera.model.Material;
 import com.grupoum.projeto_fera.model.Produto;
 import com.grupoum.projeto_fera.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,14 +49,7 @@ public class ProdutoService {
         if (produtoRepository.existsByCodigo(produto.getCodigo())) {
             throw new RuntimeException("Código já cadastrado: " + produto.getCodigo());
         }
-        Set<Material> materiais = new HashSet<>(produto.getMateriais());
-        Set<Cor> cores = new HashSet<>(produto.getCores());
-        produto.getMateriais().clear();
-        produto.getCores().clear();
-        Produto salvo = produtoRepository.saveAndFlush(produto);
-        salvo.getMateriais().addAll(materiais);
-        salvo.getCores().addAll(cores);
-        return produtoRepository.saveAndFlush(salvo);
+        return produtoRepository.save(produto);
     }
 
     public long contarTodos() {

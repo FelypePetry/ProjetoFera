@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Admin — Fera Metalúrgica Móveis Planejados</title>
+  <title>Painel Admin — Marcenaria Móveis Planejados</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <script>
@@ -25,13 +25,15 @@
 </head>
 <body class="min-h-screen bg-gray-50">
 
-<!-- ADMIN HEADER -->
-<div class="bg-brand-dark text-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl">Painel Administrativo</h1>
-        <p class="text-gray-300 mt-1">Fera Metalúrgica Móveis Planejados</p>
+  <!-- ADMIN HEADER -->
+  <div class="bg-brand-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl">Painel Administrativo</h1>
+          <p class="text-gray-300 mt-1">Marcenaria Móveis Planejados</p>
+        </div>
+        <a href="index.html" class="text-sm text-gray-300 hover:text-white transition-colors">← Voltar ao site</a>
       </div>
       <a th:href="@{/}" class="text-sm text-gray-300 hover:text-white transition-colors">← Voltar ao site</a>
     </div>
@@ -311,19 +313,19 @@
     renderProductsTable(products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)));
   }
 
-  function setTab(name) {
-    const tabs = ['dashboard','pedidos','produtos','clientes','orcamentos','relatorios'];
-    tabs.forEach(t => {
-      document.getElementById('tab-' + t).classList.remove('active');
-      const btn = document.getElementById('tab-btn-' + t);
-      btn.classList.remove('bg-brand-green','text-white');
-      btn.classList.add('text-gray-700','hover:bg-gray-50');
-    });
-    document.getElementById('tab-' + name).classList.add('active');
-    const activeBtn = document.getElementById('tab-btn-' + name);
-    activeBtn.classList.add('bg-brand-green','text-white');
-    activeBtn.classList.remove('text-gray-700','hover:bg-gray-50');
-  }
+    function setTab(name) {
+      const tabs = ['dashboard','pedidos','produtos','clientes','orcamentos','relatorios'];
+      tabs.forEach(t => {
+        document.getElementById('tab-' + t).classList.remove('active');
+        const btn = document.getElementById('tab-btn-' + t);
+        btn.classList.remove('bg-brand-green','text-white');
+        btn.classList.add('text-gray-700','hover:bg-gray-50');
+      });
+      document.getElementById('tab-' + name).classList.add('active');
+      const activeBtn = document.getElementById('tab-btn-' + name);
+      activeBtn.classList.add('bg-brand-green','text-white');
+      activeBtn.classList.remove('text-gray-700','hover:bg-gray-50');
+    }
 
   // Init
   renderOrdersTable();

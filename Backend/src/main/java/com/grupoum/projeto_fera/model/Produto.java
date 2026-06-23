@@ -1,6 +1,5 @@
 package com.grupoum.projeto_fera.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -25,7 +24,6 @@ public class Produto {
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JsonIgnore
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrcamentoProduto> orcamentoProdutos = new HashSet<>();
 
@@ -62,24 +60,6 @@ public class Produto {
 
     @Column(name = "categoria", length = 100)
     private String categoria;
-
-    @Builder.Default
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @ManyToMany
-    @JoinTable(name = "prod_material",
-            joinColumns = @JoinColumn(name = "id_produto"),
-            inverseJoinColumns = @JoinColumn(name = "id_material"))
-    private Set<Material> materiais = new HashSet<>();
-
-    @Builder.Default
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @ManyToMany
-    @JoinTable(name = "prod_cor",
-            joinColumns = @JoinColumn(name = "id_produto"),
-            inverseJoinColumns = @JoinColumn(name = "id_cor"))
-    private Set<Cor> cores = new HashSet<>();
 
     @Builder.Default
     @Column(nullable = false)
